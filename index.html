@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adarsh — Document &amp; Image Pipelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1115;
+    --bg-2:#15181d;
+    --paper:#f1ecd9;
+    --amber:#e8a33d;
+    --teal:#3e6e64;
+    --text:#e9e4d6;
+    --text-dim:#7d848c;
+    --line:rgba(233,228,214,0.09);
+    --mono:'IBM Plex Mono', monospace;
+    --sans:'IBM Plex Sans', sans-serif;
+  }
+  html[data-theme="light"]{
+    --bg:#f1ecd9;
+    --bg-2:#e7e0c9;
+    --text:#12161c;
+    --text-dim:#6b6455;
+    --line:rgba(18,22,28,0.1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    transition:background .3s, color .3s;
+  }
+  ::selection{background:var(--amber); color:#12161c;}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    border-bottom:1px solid var(--line);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(6px);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:56px; font-family:var(--mono); font-size:12.5px;
+  }
+  .navlinks{display:flex; align-items:center; gap:24px; color:var(--text-dim);}
+  .navlinks a{color:inherit; text-decoration:none; transition:color .2s;}
+  .navlinks a:hover{color:var(--amber);}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .clock{color:var(--text-dim); letter-spacing:0.02em;}
+  .theme-toggle{
+    background:none; border:1px solid var(--line); color:var(--text-dim);
+    font-family:var(--mono); font-size:11px; padding:4px 9px; border-radius:3px;
+    cursor:pointer; transition:all .2s;
+  }
+  .theme-toggle:hover{border-color:var(--amber); color:var(--amber);}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:150px 0 100px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; color:var(--amber);
+    letter-spacing:0.08em; margin-bottom:18px;
+  }
+  h1{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(30px, 5vw, 50px);
+    line-height:1.18; letter-spacing:-0.01em;
+    max-width:760px;
+  }
+  h1 .dim{color:var(--text-dim); font-weight:400;}
+  .hero-desc{
+    max-width:520px; margin-top:26px; color:var(--text-dim); font-size:16px;
+  }
+  .hero-desc a{color:var(--amber); text-decoration:none; border-bottom:1px solid rgba(232,163,61,0.4);}
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:80px 0;}
+  h2{
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    letter-spacing:0.08em; color:var(--text-dim);
+    text-transform:uppercase; margin-bottom:36px;
+  }
+
+  /* ---------- PROJECT LIST (row style) ---------- */
+  .plist{border-top:1px solid var(--line);}
+  .prow{
+    display:grid;
+    grid-template-columns:90px 1fr auto;
+    align-items:baseline;
+    gap:20px;
+    padding:22px 0;
+    border-bottom:1px solid var(--line);
+    transition:opacity .2s;
+  }
+  .prow:hover{opacity:0.7;}
+  .prow .pyear{font-family:var(--mono); font-size:12.5px; color:var(--text-dim);}
+  .prow .ptitle{font-family:var(--mono); font-size:16px; font-weight:500;}
+  .prow .pdesc{color:var(--text-dim); font-size:13.5px; margin-top:4px; max-width:520px;}
+  .prow .ptag{
+    font-family:var(--mono); font-size:11px; color:var(--teal);
+    border:1px solid var(--line); padding:3px 8px; border-radius:3px;
+    white-space:nowrap;
+  }
+
+  /* ---------- STACK ---------- */
+  .stack-row{
+    display:flex; flex-wrap:wrap; gap:10px;
+  }
+  .stack-row span{
+    font-family:var(--mono); font-size:12.5px; color:var(--text-dim);
+    border:1px solid var(--line); padding:6px 12px; border-radius:20px;
+  }
+
+  /* ---------- CLOSING STATEMENT ---------- */
+  .closer{
+    padding:120px 0;
+    text-align:center;
+  }
+  .closer .big{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(30px, 7vw, 68px);
+    line-height:1.08; letter-spacing:-0.02em;
+  }
+  .closer .big .fade{color:var(--text-dim);}
+  .closer .big .accent{color:var(--amber);}
+
+  /* ---------- CONTACT ---------- */
+  footer{padding:60px 0 70px; border-top:1px solid var(--line);}
+  footer .foot-row{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:20px;
+  }
+  .foot-email{
+    font-family:var(--mono); font-size:15px; text-decoration:none; color:var(--text);
+    border-bottom:1px solid var(--amber);
+  }
+  .foot-links{display:flex; gap:20px; font-family:var(--mono); font-size:12.5px; color:var(--text-dim);}
+  .foot-links a{color:inherit; text-decoration:none; transition:color .2s;}
+  .foot-links a:hover{color:var(--amber);}
+  .foot-copy{
+    margin-top:36px; font-family:var(--mono); font-size:11.5px; color:var(--text-dim);
+  }
+
+  @media (max-width:640px){
+    .prow{grid-template-columns:1fr; gap:6px;}
+    .prow .ptag{justify-self:start;}
+    .navlinks{gap:14px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+  a:focus-visible, button:focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="navlinks">
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle">THEME</button>
+      <span class="clock" id="clock">--:-- IST</span>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">// design &amp; engineering, on paper</div>
+    <h1>Files in, documents out. <span class="dim">I build the pipelines that turn raw scans, photos and text into finished, sendable files.</span></h1>
+    <p class="hero-desc">I'm Adarsh — working mostly in Python across image processing, PDF generation, and multilingual document rendering. Currently taking on small, well-defined document and image jobs. Reach me at <a href="mailto:hello@example.com">hello@example.com</a>.</p>
+  </div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <h2>Selected work</h2>
+    <div class="plist">
+      <div class="prow">
+        <span class="pyear">2026</span>
+        <div>
+          <div class="ptitle">Sports action photo enhancement</div>
+          <div class="pdesc">Sharpening, correction, and detail recovery on a high-motion shot, via a Python image pipeline.</div>
+        </div>
+        <span class="ptag">.png</span>
+      </div>
+      <div class="prow">
+        <span class="pyear">2026</span>
+        <div>
+          <div class="ptitle">Supreme Court judgment — translated &amp; typeset</div>
+          <div class="pdesc">Translated to Malayalam and rendered as a properly shaped PDF using Noto Sans Malayalam + wkhtmltopdf.</div>
+        </div>
+        <span class="ptag">.pdf</span>
+      </div>
+      <div class="prow">
+        <span class="pyear">2026</span>
+        <div>
+          <div class="ptitle">Identity &amp; financial document compiler</div>
+          <div class="pdesc">Compiled a set of document images into a single, formatted, multi-page PDF ready for submission.</div>
+        </div>
+        <span class="ptag">.pdf</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <h2>Tools</h2>
+    <div class="stack-row">
+      <span>Python</span>
+      <span>Pillow / OpenCV</span>
+      <span>reportlab</span>
+      <span>wkhtmltopdf</span>
+      <span>Noto fonts / HarfBuzz</span>
+      <span>PyPDF</span>
+    </div>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <div class="big">Send me the <span class="accent">messy file.</span><br><span class="fade">I'll send back the</span> finished one.</div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-row">
+      <a class="foot-email" href="mailto:hello@example.com">hello@example.com</a>
+      <div class="foot-links">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#work">Work</a>
+      </div>
+    </div>
+    <div class="foot-copy">ADARSH © 2026</div>
+  </div>
+</footer>
+
+<script>
+  // live clock, IST-style (adjust as needed)
+  function tick(){
+    const el = document.getElementById('clock');
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    el.textContent = `${h}:${m} IST`;
+  }
+  tick();
+  setInterval(tick, 1000 * 10);
+
+  // theme toggle
+  const btn = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  btn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    root.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+  });
+</script>
+
+</body>
+</html>
